@@ -15,6 +15,33 @@ NOTES:
 
 #include <stdio.h>
 
+void compare(int *Arr, int i, int score, int *lessCount, int *moreCount) {
+	if (Arr[i] < score) {
+		(*lessCount)++;
+	}
+	else if (Arr[i] > score) {
+		(*moreCount)++;
+	}
+}
+
 void * studentsCount(int *Arr, int len, int score, int *lessCount, int *moreCount) {
+	*lessCount = 0;
+	*moreCount = 0;
+	if (Arr == NULL || len < 1) {
+		return NULL;
+	}
+	int i = 0, j = len - 1;
+	while (i < j) {
+		// comparing from front 
+		compare(Arr, i, score, lessCount, moreCount);
+		i++;
+		// comparing from back
+		compare(Arr, j, score, lessCount, moreCount);
+		j--;
+	}
+	// comparing middle element
+	if (i == j) {
+		compare(Arr, i, score, lessCount, moreCount);
+	}
 	return NULL;
 }

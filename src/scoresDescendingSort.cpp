@@ -14,12 +14,66 @@ NOTES:
 */
 
 #include <stdio.h>
+#include <malloc.h>
 
 struct student {
 	char name[10];
 	int score;
 };
 
+void mergeSort(struct student *, int, int);
+void merge(struct student *, int, int, int);
+
 void * scoresDescendingSort(struct student *students, int len) {
+	if (students != NULL && len > 1) {
+		int l = 0;
+		int h = len - 1;
+		mergeSort(students, l, h);
+	}
 	return NULL;
+}
+
+void mergeSort(struct student *students, int l, int h) {
+	if (l < h) {
+		int mid = (l + h) / 2;
+		mergeSort(students, l, mid);
+		mergeSort(students, mid + 1, h);
+		merge(students, l, mid, h);
+	}
+}
+
+void merge(struct student *students, int l, int mid, int h) {
+	struct student *temp = (struct student*) malloc(sizeof(struct student) * (h - l + 1));
+	int i = l;
+	int j = mid + 1;
+	int k = l;
+	while (i <= mid && j <= h) {
+		if (students[i].score >= students[j].score) {
+			temp[k] = students[i];
+			i++;
+		}
+		else {
+			temp[k] = students[j];
+			j++;
+		}
+		k++;
+	}
+	/* append remaining left elements */
+	while (i <= mid) {
+		temp[k] = students[i];
+		k++;
+		i++;
+	}
+	/* append remaining right elements */
+	while (j <= h) {
+		temp[k] = students[j];
+		k++;
+		j++;
+	}
+	/* copy sorted data */
+	for (i = l, k = 0; i <= h; i++, k++) {
+		students[i] = temp[k];
+	}
+	free(temp);
+	temp = NULL;
 }

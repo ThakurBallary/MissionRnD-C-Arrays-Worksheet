@@ -11,8 +11,8 @@ int main(){
 	int i;
 
 	//Test Students Count
-	int Arr[5] = { 10, 20, 30, 30, 40 }, lessCount, moreCount;
-	studentsCount(Arr, 5, 10, &lessCount, &moreCount);
+	int Arr[10] = { 1, 2, 2, 2, 2, 2, 2, 2, 2, 3 }, lessCount, moreCount;
+	studentsCount(Arr, 10, 2, &lessCount, &moreCount);
 	printf("%d %d\n", lessCount, moreCount);
 
 	//Test sortedArrayInsertNumber
@@ -53,6 +53,6 @@ int main(){
 	for (i = 0; i < 3; i++) {
 		printf("%d ", result[i]->score);
 	}
-
+	
 	return 0;
 }

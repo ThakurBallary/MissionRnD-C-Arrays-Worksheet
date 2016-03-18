@@ -15,12 +15,82 @@ NOTES:
 
 #include <stdio.h>
 
-void compare(int *Arr, int i, int score, int *lessCount, int *moreCount) {
-	if (Arr[i] < score) {
-		(*lessCount)++;
+int binarySearhScore(int *Arr, int len, int score) {
+	int low = 0;
+	int high = len - 1;
+	while (low < high) {
+		int mid = (low + high) / 2;
+		if (Arr[mid] == score) {
+			return mid;
+		}
+		else if (mid > 0 && Arr[mid - 1] < score && Arr[mid + 1] > score) {
+			return mid;
+		}
+		else if (Arr[mid] < score) {
+			low = mid + 1;
+		}
+		else {			
+			high = mid - 1;
+		}
 	}
-	else if (Arr[i] > score) {
-		(*moreCount)++;
+	if (Arr[low] == score) {
+		return low;
+	}
+	else if (score < Arr[low]) {
+		return -2;
+	}
+	else {
+		return -1;
+	}
+}
+
+int binaryLowCount(int *Arr, int low, int high, int score) {
+	if (Arr[0] >= score) {
+		return 0;
+	}
+	int end = high;
+	while (low < high) {
+		int mid = (low + high) / 2;
+		if (mid > 0 && Arr[mid] == score && Arr[mid - 1] < score) {
+			return mid;
+		}
+		else if (Arr[mid] < score) {
+			low = mid + 1;
+		}
+		else {
+			high = mid - 1;
+		}
+	}
+	if (Arr[low] >= score) {
+		return low;
+	}
+	else {
+		return low + 1;
+	}
+}
+
+int binaryHighCount(int *Arr, int low, int high, int score) {
+	if (Arr[high] <= score) {
+		return 0;
+	}
+	int end = high;
+	while (low < high) {
+		int mid = (low + high) / 2;
+		if (mid < end && Arr[mid] == score && Arr[mid + 1] > score) {
+			return end - mid;
+		}
+		else if (Arr[mid] <= score) {
+			low = mid + 1;
+		}
+		else {
+			high = mid - 1;			
+		}
+	}
+	if (Arr[low] <= score) {
+		return end - low;
+	}
+	else {
+		return low + 1;
 	}
 }
 
@@ -30,18 +100,16 @@ void * studentsCount(int *Arr, int len, int score, int *lessCount, int *moreCoun
 	if (Arr == NULL || len < 1) {
 		return NULL;
 	}
-	int i = 0, j = len - 1;
-	while (i < j) {
-		// comparing from front 
-		compare(Arr, i, score, lessCount, moreCount);
-		i++;
-		// comparing from back
-		compare(Arr, j, score, lessCount, moreCount);
-		j--;
+	int i = binarySearhScore(Arr, len, score);
+	if (i == -1) {
+		*lessCount = len;
 	}
-	// comparing middle element
-	if (i == j) {
-		compare(Arr, i, score, lessCount, moreCount);
+	else if (i == -2) {
+		*moreCount = len;
+	}
+	else {
+		*lessCount = binaryLowCount(Arr, 0, i, score);
+		*moreCount = binaryHighCount(Arr, i, len-1, score);		
 	}
 	return NULL;
 }
